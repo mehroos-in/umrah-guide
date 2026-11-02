@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://mehroos-in.github.io/umrah-guide/sitemap.xml
