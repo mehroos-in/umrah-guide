@@ -18,7 +18,7 @@ h1{margin:0;font-size:34px}.wrap{max-width:850px;margin:auto;padding:16px}
 nav,.card{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 14px #0000000a}
 nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 select,button{font:inherit;padding:10px;border:1px solid #ccd8d0;border-radius:9px}
-button{background:var(--g);color:white;border:0;cursor:pointer}
+button,.book{background:var(--g);color:white;border:0;cursor:pointer;text-decoration:none;display:inline-block}
 h2{font-size:20px;color:var(--g);margin:0 0 8px}.ar{direction:rtl;text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:25px;line-height:1.9;color:#174633}
 .pron{background:#f2f7f3;padding:10px;border-radius:8px}.ref{font-size:13px;color:#65736b}
 .notice{font-size:13px;color:#65736b}
@@ -28,7 +28,7 @@ h2{font-size:20px;color:var(--g);margin:0 0 8px}.ar{direction:rtl;text-align:rig
 <div class="wrap">
 <nav class="toolbar"><label id="choose">Choose language:</label><select id="lang">
 <option value="ml">മലയാളം</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="en">English</option><option value="ar">العربية</option></select>
-<button onclick="window.print()" id="pdf">Download / Print PDF</button></nav>
+<button onclick="window.print()" id="pdf">Download / Print PDF</button><a class="book" id="nusukBook" href="https://www.nusuk.sa/service-details/173" target="_blank" rel="noopener noreferrer">Book an Umrah permit on Nusuk</a></nav>
 <p class="notice" id="notice">Priority languages: Hindi, Urdu and Malayalam. Arabic duas are preserved. Use Print → Save as PDF to download.</p>
 <main id="main"></main>
 <footer class="notice">Free educational resource. Check current official Saudi instructions. Transliteration is approximate; learn correct Arabic pronunciation where possible.</footer>
@@ -77,6 +77,9 @@ duas:[
 guide:"ത്വവാഫിലും സഅ്‌യിലും സ്വന്തം ഭാഷയിൽ ദുആ ചെയ്യാം. തെളിവില്ലാതെ പ്രത്യേക വാക്കുകളോ എണ്ണമോ നിർബന്ധമാണെന്ന് കരുതരുത്. ആത്മാർത്ഥമായി പ്രാർത്ഥിക്കുകയും ഹലാലായ പ്രായോഗിക ശ്രമങ്ങൾ തുടരുകയും ചെയ്യുക."
 }};
 const labels={hi:["भाषा चुनें:","PDF डाउनलोड / प्रिंट","हिंदी इंटरफ़ेस उपलब्ध है; विस्तृत दुआ अनुवाद की मानवीय समीक्षा अभी बाकी है।"],ur:["زبان منتخب کریں:","PDF ڈاؤن لوڈ / پرنٹ","اردو انٹرفیس دستیاب ہے؛ مکمل دعاؤں کے ترجمے کی انسانی جانچ ابھی باقی ہے۔"],ta:["மொழியைத் தேர்ந்தெடுக்கவும்:","PDF பதிவிறக்கம் / அச்சிடு","தமிழ் இடைமுகம் உள்ளது; முழு துஆ மொழிபெயர்ப்புக்கு மனித மதிப்பாய்வு இன்னும் தேவை."],bn:["ভাষা নির্বাচন করুন:","PDF ডাউনলোড / প্রিন্ট","বাংলা ইন্টারফেস আছে; সম্পূর্ণ দোয়ার অনুবাদে মানব-পর্যালোচনা এখনও বাকি।"],ar:["اختر اللغة:","تنزيل / طباعة PDF","واجهة عربية متاحة؛ مراجعة بشرية لترجمة الأدعية كاملة ما زالت مطلوبة."],id:["Pilih bahasa:","Unduh / Cetak PDF","Antarmuka Bahasa Indonesia tersedia; terjemahan lengkap doa masih perlu ditinjau manusia."]};
+const translationWarnings={ml:"Translation warning: this Malayalam text may contain errors. Verify the Arabic text and consult a qualified scholar before relying on it.",hi:"Translation warning: this Hindi text may contain errors. Verify the Arabic text and consult a qualified scholar before relying on it.",ur:"Translation warning: this Urdu text may contain errors. Verify the Arabic text and consult a qualified scholar before relying on it.",ar:"Translation warning: this Arabic explanation may contain errors. Verify the Arabic text and consult a qualified scholar before relying on it."};
+const bookLabels={en:"Book an Umrah permit on Nusuk",ml:"Book an Umrah permit on Nusuk",hi:"Book an Umrah permit on Nusuk",ur:"Book an Umrah permit on Nusuk",ar:"احجز تصريح العمرة عبر نسك"};
+const stepSources=["Talbiyah wording: Sahih al-Bukhari and Sahih Muslim. Scholar review is still required for the instructional context.","Sahih al-Bukhari and Sahih Muslim.","Sahih Muslim 713.","Qur’an 2:201; reported between the Yemeni Corner and the Black Stone.","","Qur’an 2:158.",""];
 function esc(x){return String(x||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function render(){
 let l=document.getElementById("lang").value, tr=translations[l], d=content[l]||content.en;
@@ -87,18 +90,16 @@ document.getElementById("tag").textContent=(tr&&tr.tag)||d.tag||"Umrah guide";
 document.getElementById("choose").textContent=(tr&&tr.choose)||d.choose||labels[l]?.[0]||"Choose language:";
 document.getElementById("pdf").textContent=(tr&&tr.pdf)||d.pdf||labels[l]?.[1]||"Download / Print PDF";
 document.getElementById("notice").textContent=(tr&&tr.notice)||d.notice||labels[l]?.[2]||"Select a language.";
+document.getElementById("nusukBook").textContent=bookLabels[l]||bookLabels.en;
 let m=document.getElementById("main");m.innerHTML="";
+if(translationWarnings[l]){let warning=document.createElement("section");warning.className="card notice";warning.textContent=translationWarnings[l];m.appendChild(warning);}
 if(isTranslated){
  let intro=document.createElement("section");intro.className="card";intro.textContent=tr.notice+" Detailed translation draft; native-speaker and qualified Islamic review are still required before treating it as approved.";m.appendChild(intro);
- tr.steps.forEach((s,i)=>{let b=content.en.steps[i],e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${esc(s[0])}</h2><p>${esc(s[1])}</p>${b[2]?`<div class="ar">${b[2]}</div>`:""}${b[3]?`<p class="pron"><b>Pronunciation:</b> ${esc(b[3])}</p>`:""}${stepMeanings[l]?.[i]?`<p><b>Meaning:</b> ${esc(stepMeanings[l][i])}</p>`:""}${s[2]?`<p class="ref">${esc(s[2])}</p>`:""}`;m.appendChild(e);});
- let title=document.createElement("section");title.className="card";title.innerHTML="<h2>"+esc(tr.duaHeading)+"</h2>";m.appendChild(title);
- tr.duaTitles.forEach((t,i)=>{let b=content.en.duas[i],e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${i+1}. ${esc(t)}</h2><div class="ar">${b[1]}</div><p class="pron"><b>Pronunciation:</b> ${esc(b[2])}</p><p><b>Meaning:</b> ${esc(tr.duaMeanings[i])}</p><p class="ref">${esc(b[4])}</p>`;m.appendChild(e);});
+ tr.steps.forEach((s,i)=>{let b=content.en.steps[i],source=stepSources[i]||s[2]||b[5],e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${esc(s[0])}</h2><p>${esc(s[1])}</p>${b[2]?`<div class="ar">${b[2]}</div>`:""}${b[3]?`<p class="pron"><b>Pronunciation:</b> ${esc(b[3])}</p>`:""}${stepMeanings[l]?.[i]?`<p><b>Meaning:</b> ${esc(stepMeanings[l][i])}</p>`:""}${b[2]&&source?`<p class="ref"><b>Source:</b> ${esc(source)}</p>`:""}`;m.appendChild(e);});
  let g=document.createElement("section");g.className="card";g.textContent=tr.guide;m.appendChild(g);
 } else {
  let intro=document.createElement("section");intro.className="card";intro.textContent="This language interface is available. Detailed translation is being prepared and reviewed.";m.appendChild(intro);
- (d.steps||content.en.steps).forEach((s,i)=>{let e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${esc(s[0])}</h2><p>${esc(s[1])}</p>${s[2]?`<div class="ar">${s[2]}</div>`:""}${s[3]?`<p class="pron"><b>Pronunciation / ഉച്ചാരണം:</b> ${esc(s[3])}</p>`:""}${s[4]?`<p><b>Meaning / അർത്ഥം:</b> ${esc(s[4])}</p>`:""}${s[5]?`<p class="ref">${esc(s[5])}</p>`:""}`;m.appendChild(e);});
- let title=document.createElement("section");title.className="card";title.innerHTML="<h2>"+(l==="ml"?"റിസ്‌ഖിനും ജീവിതപ്രയാസങ്ങൾക്കുമുള്ള ദുആകൾ":"Duas for provision and life's difficulties")+"</h2>";m.appendChild(title);
- (d.duas||content.en.duas).forEach((s,i)=>{let e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${i+1}. ${esc(s[0])}</h2><div class="ar">${s[1]}</div><p class="pron"><b>Pronunciation / ഉച്ചാരണം:</b> ${esc(s[2])}</p><p><b>Meaning / അർത്ഥം:</b> ${esc(s[3])}</p><p class="ref">${esc(s[4])}</p>`;m.appendChild(e);});
+ (d.steps||content.en.steps).forEach((s,i)=>{let source=stepSources[i]||s[5],e=document.createElement("section");e.className="card";e.innerHTML=`<h2>${esc(s[0])}</h2><p>${esc(s[1])}</p>${s[2]?`<div class="ar">${s[2]}</div>`:""}${s[3]?`<p class="pron"><b>Pronunciation / ഉച്ചാരണം:</b> ${esc(s[3])}</p>`:""}${s[4]?`<p><b>Meaning / അർത്ഥം:</b> ${esc(s[4])}</p>`:""}${s[2]&&source?`<p class="ref"><b>Source:</b> ${esc(source)}</p>`:""}`;m.appendChild(e);});
  let g=document.createElement("section");g.className="card";g.textContent=d.guide||content.en.guide;m.appendChild(g);
 }
 }
