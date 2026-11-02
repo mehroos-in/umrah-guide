@@ -12,22 +12,34 @@
 
 <style>
 :root{--g:#0b4938;--p:#f3f7f4;--ink:#1d2923}*{box-sizing:border-box}
-body{margin:0;background:var(--p);color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+body{margin:0;background:var(--p);color:var(--ink);font:calc(16px * var(--font-scale,1))/1.7 system-ui,sans-serif}
 header{background:linear-gradient(130deg,#073b2d,#17664c);color:white;text-align:center;padding:28px 16px}
-h1{margin:0;font-size:34px}.wrap{max-width:850px;margin:auto;padding:16px}
+h1{margin:0;font-size:calc(34px * var(--font-scale,1))}.wrap{max-width:850px;margin:auto;padding:16px}
 nav,.card{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 14px #0000000a}
 nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 select,button{font:inherit;padding:10px;border:1px solid #ccd8d0;border-radius:9px}
 button,.book{background:var(--g);color:white;border:0;cursor:pointer;text-decoration:none;display:inline-block}
-h2{font-size:20px;color:var(--g);margin:0 0 8px}.ar{direction:rtl;text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:25px;line-height:1.9;color:#174633}
-.pron{background:#f2f7f3;padding:10px;border-radius:8px}.ref{font-size:13px;color:#65736b}
-.notice{font-size:13px;color:#65736b}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #e3a72f;outline-offset:2px}
+h2{font-size:calc(20px * var(--font-scale,1));color:var(--g);margin:0 0 10px}
+main .card{text-align:start;overflow-wrap:anywhere}
+main .card p{margin:10px 0}
+.ar{direction:rtl;text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:calc(25px * var(--font-scale,1));line-height:1.9;color:#174633;margin:12px 0}
+.pron{background:#f2f7f3;padding:10px;border-radius:8px}.ref{font-size:calc(13px * var(--font-scale,1));color:#65736b}
+.notice{font-size:calc(13px * var(--font-scale,1));color:#65736b}
+.font-controls{display:inline-flex;align-items:center;gap:6px;margin-inline-start:auto}
+.font-controls button{min-width:42px;padding:8px 10px}
+@media(max-width:560px){.wrap{padding:10px}nav,.card{padding:13px}nav{align-items:stretch}.font-controls{margin-inline-start:0;width:100%}.font-controls button{flex:1}}
 @media print{body{background:white}.toolbar,footer{display:none}.card{box-shadow:none;break-inside:avoid}}
 </style></head><body>
 <header><h1>UMRAH GUIDE</h1><div id="tag">A free step-by-step companion for every pilgrim</div></header>
 <div class="wrap">
 <nav class="toolbar"><label id="choose">Choose language:</label><select id="lang">
 <option value="ml">മലയാളം</option><option value="hi">हिन्दी</option><option value="ur">اردو</option><option value="en">English</option><option value="ar">العربية</option></select>
+<div class="font-controls" role="group" aria-label="Font size controls">
+<button type="button" id="fontDown" aria-label="Decrease font size" title="Decrease font size">A−</button>
+<button type="button" id="fontReset" aria-label="Reset font size" title="Reset font size">A</button>
+<button type="button" id="fontUp" aria-label="Increase font size" title="Increase font size">A+</button>
+</div>
 <button onclick="window.print()" id="pdf">Download / Print PDF</button><a class="book" id="nusukBook" href="https://www.nusuk.sa/service-details/173" target="_blank" rel="noopener noreferrer">Book an Umrah permit on Nusuk</a><a class="book" href="official-umrah-booking.html">Official booking information</a></nav>
 <p class="notice" id="notice">Priority languages: Hindi, Urdu and Malayalam. Arabic duas are preserved. Use Print → Save as PDF to download.</p>
 <main id="main"></main>
@@ -103,5 +115,17 @@ if(isTranslated){
  let g=document.createElement("section");g.className="card";g.textContent=d.guide||content.en.guide;m.appendChild(g);
 }
 }
+const FONT_MIN=0.9,FONT_MAX=1.35,FONT_STEP=0.1,FONT_DEFAULT=1;
+function setFontScale(value){
+ const scale=Math.min(FONT_MAX,Math.max(FONT_MIN,Math.round(value*100)/100));
+ document.documentElement.style.setProperty("--font-scale",String(scale));
+ try{localStorage.setItem("umrahGuideFontScale",String(scale));}catch(e){}
+}
+let savedFont=FONT_DEFAULT;
+try{const stored=parseFloat(localStorage.getItem("umrahGuideFontScale"));if(Number.isFinite(stored))savedFont=stored;}catch(e){}
+setFontScale(savedFont);
+document.getElementById("fontDown").addEventListener("click",()=>setFontScale(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--font-scale")||FONT_DEFAULT)-FONT_STEP));
+document.getElementById("fontReset").addEventListener("click",()=>setFontScale(FONT_DEFAULT));
+document.getElementById("fontUp").addEventListener("click",()=>setFontScale(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--font-scale")||FONT_DEFAULT)+FONT_STEP));
 document.getElementById("lang").addEventListener("change",render);render();
 </script></body></html>
