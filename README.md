@@ -1,19 +1,23 @@
-# Umrah Guide — Priority Languages
+# Umrah Guide — Private Review Staging
 
-A free static Umrah guide focused on **Hindi, Urdu and Malayalam**, with English and Arabic also available.
+A private staging copy of a static Umrah guide focused on **Hindi, Urdu, and Malayalam**, with English and Arabic also available as reference languages.
 
 ## Included
+
 - Step-by-step Umrah guidance
-- Arabic duas, transliteration, meanings and references
-- Hindi and Urdu translated content
-- Malayalam content
+- Arabic duas, transliteration, meanings, and references
+- Hindi, Urdu, and Malayalam content
 - Print / Save as PDF support
-- SEO basics, sitemap and robots.txt
+- Private-preview metadata and source files
 
-## Language review status
-The translations are working drafts checked for consistency against the English source. This is not the same as independent native-speaker proofreading or qualified Islamic scholarly approval. Please obtain those reviews before presenting the guide as religiously certified.
+## Review status
 
-## Publish on GitHub Pages
-Create a **public** repository named `umrah-guide`, upload all files in this folder to the repository root, then open **Settings → Pages → Deploy from a branch → main → /(root)**. GitHub Pages hosting is free for eligible public repositories.
+The translations are working drafts checked for consistency against the English source. They are **not** independently native-speaker proofread or qualified Islamic scholar-approved.
 
-After publishing, verify the live site on mobile, check right-to-left Urdu rendering, and submit `https://YOUR-USERNAME.github.io/umrah-guide/sitemap.xml` in Google Search Console.
+## Publication status
+
+- Repository visibility: **private**
+- GitHub Pages: **not configured**
+- Public deployment: **disabled**
+
+Do not make this repository public, enable GitHub Pages, or publish the guide until a qualified Islamic review and native-speaker proofreading are complete and the owner explicitly approves publication.
